@@ -34,10 +34,6 @@ jobs:
         uses: PostHog/check-package-version@v2
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
-      - name: Use Node.js 10.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: '10.x'
       - name: npm install
         run: |
           npm i -g @toast-ui/doc
@@ -45,7 +41,7 @@ jobs:
       - name: npm install(toast.ui-grid)
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          npm ci
+          npm install
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -85,13 +81,9 @@ jobs:
         uses: PostHog/check-package-version@v2
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
-      - name: Use Node.js 10.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: '10.x'
       - name: Install
         run: |
-          npm ci
+          npm install
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -110,18 +102,14 @@ jobs:
     needs: [checkVersion]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '10.x'
-          registry-url: https://registry.npmjs.org/
+      - uses: actions/checkout@v2
       - name: npm install
         run: |
-          npm ci
+          npm install
       - name: npm install(toast.ui-grid)
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          npm ci
+          npm install
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
