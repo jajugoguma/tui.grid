@@ -84,6 +84,10 @@ jobs:
       - name: Install
         run: |
           npm install
+      - name: npm install(toast.ui-grid)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          npm install
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -100,6 +104,8 @@ jobs:
 
   publish-npm:
     needs: [checkVersion]
+    env:
+      WORKING_DIRECTORY: ./packages/toast-ui.grid
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -110,6 +116,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           npm install
+          ls -al
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
