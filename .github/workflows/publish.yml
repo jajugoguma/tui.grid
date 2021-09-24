@@ -22,7 +22,7 @@ jobs:
         uses: andymckay/cancel-action@0.2
 
   deploy-doc:
-    needs: [checkVersion]
+    needs: [checkVersion, tag]
     env:
       WORKING_DIRECTORY: ./packages/toast-ui.grid
     runs-on: ubuntu-latest
@@ -50,8 +50,9 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           npm run doc
-          mv apps/toast-ui.grid/${{ steps.version.outputs.committed-version }} ${{ steps.version.outputs.committed-version }}
-          mv -i apps/toast-ui.grid/_latest latest
+          mv _${{ steps.version.outputs.committed-version }} ../../${{ steps.version.outputs.committed-version }}
+          mv -i _latest ../../latest
+          rm -rf tmpdoc
           git stash --include-untracked
       - name: Checkout gh-pages
         uses: actions/checkout@v2
@@ -100,12 +101,12 @@ jobs:
           git tag v${{ steps.version.outputs.committed-version }}
       - name: Push changes
         run: |
-          git push origin v${{ steps.tgv.outputs.target-version }}
+          git push origin v${{ steps.version.outputs.committed-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
-    needs: [checkVersion]
+    needs: [checkVersion, tag]
     env:
       WORKING_DIRECTORY: ./packages/toast-ui.grid
     runs-on: ubuntu-latest
