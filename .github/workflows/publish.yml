@@ -53,7 +53,7 @@ jobs:
           mv _${{ steps.version.outputs.committed-version }} ../../${{ steps.version.outputs.committed-version }}
           mv -i _latest ../../latest
           rm -rf tmpdoc
-          git stash
+          git stash --include-untracked
       - name: Checkout gh-pages
         uses: actions/checkout@v2
         with:
