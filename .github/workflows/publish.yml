@@ -14,6 +14,10 @@ jobs:
         uses: PostHog/check-package-version@v2
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
+      - name: Echo versions
+          run: |
+              echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
+              echo "Published version: ${{ steps.cpv.outputs.published-version }}"
       - name: Log when unchanged
         if: steps.check.outputs.is-new-version == 'false'
         run: 'echo "No version change"'
