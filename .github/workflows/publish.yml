@@ -47,6 +47,7 @@ jobs:
         run: |
           npm run build
       - name: Run doc
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           npm run doc
           mv apps/toast-ui.grid/${{ steps.version.outputs.committed-version }} ${{ steps.version.outputs.committed-version }}
@@ -58,8 +59,8 @@ jobs:
           ref: gh-pages
       - name: Commit files
         run: |
-          git config --local user.email "js87zz.lee@nhn.com"
-          git config --local user.name "js87zz"
+          git config --local user.email "jajugoguma@gmail.com"
+          git config --local user.name "jajugoguma"
           git stash pop
           git add .
           git commit -m "${{ steps.version.outputs.committed-version }}"
@@ -94,13 +95,14 @@ jobs:
           npm run build
       - name: Create Tag
         run: |
-          git config --local user.email "js87zz.lee@nhn.com"
-          git config --local user.name "js87zz"
+          git config --local user.email "jajugoguma@gmail.com"
+          git config --local user.name "jajugoguma"
           git tag v${{ steps.version.outputs.committed-version }}
       - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin v${{ steps.tgv.outputs.target-version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
     needs: [checkVersion]
@@ -116,13 +118,12 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           npm install
-          ls -al
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           npm run build
       - name: Publish
-        run: npm publish
         working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
