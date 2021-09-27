@@ -1,4 +1,4 @@
-name: Grid Publish
+name: Wrapper Publish
 on: [workflow_dispatch]
 
 env:
