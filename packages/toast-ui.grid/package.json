@@ -1,6 +1,6 @@
 {
   "name": "tui-test-bar",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "TOAST UI Grid : Powerful data grid control supported by TOAST UI",
   "main": "dist/tui-grid.js",
   "types": "types/index.d.ts",
@@ -21,7 +21,8 @@
     "storybook:build": "build-storybook",
     "ts2js": "tsc --outDir tmpdoc --sourceMap false --target ES2015 --noEmit false",
     "doc:dev": "npm run ts2js && tuidoc --serv",
-    "doc": "npm run ts2js && tuidoc"
+    "doc": "npm run ts2js && tuidoc",
+    "publish:cdn": "node scripts/publishToCDN.js"
   },
   "repository": {
     "type": "git",
