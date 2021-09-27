@@ -1,7 +1,7 @@
 name: Grid Publish
 on: [workflow_dispatch]
 jobs:
-  checkVersion:
+  Check-Version:
     name: Check package version
     runs-on: ubuntu-latest
     env:
@@ -21,7 +21,7 @@ jobs:
         if: steps.check.outputs.is-new-version == 'false'
         uses: andymckay/cancel-action@0.2
 
-  tag:
+  Push-Tag:
     needs: [checkVersion]
     env:
       WORKING_DIRECTORY: ./packages/toast-ui.grid
@@ -56,7 +56,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-doc:
+  Publish-Document:
     needs: [checkVersion, tag]
     env:
       WORKING_DIRECTORY: ./packages/toast-ui.grid
@@ -69,13 +69,14 @@ jobs:
         uses: PostHog/check-package-version@v2
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
-      - name: Install @toast-ui/doc
+      - name: npm install
         run: |
           npm i -g @toast-ui/doc
-      - name: Build
+          npm ci
+      - name: npm install(toast.ui-grid)
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          npm run build
+          npm ci
       - name: Run doc
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -102,13 +103,20 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
 
-  publish-npm:
+  Publish-NPM:
     needs: [checkVersion, tag]
     env:
       WORKING_DIRECTORY: ./packages/toast-ui.grid
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: npm install
+        run: |
+          npm ci
+      - name: npm install(toast.ui-grid)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          npm ci
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
