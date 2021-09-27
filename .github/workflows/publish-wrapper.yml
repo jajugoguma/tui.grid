@@ -30,3 +30,8 @@ jobs:
           git config --local user.name "jajugoguma"
           git add .
           git commit -m "chore: update version of wrappers to v${{ steps.version.outputs.committed-version }}"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
