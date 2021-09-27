@@ -69,6 +69,7 @@ jobs:
           path: ${{ env.WORKING_DIRECTORY }}/
       - name: npm install
         uses: ./.github/actions/install-dependencies
+      - name: npm i -g @toast-ui/doc
         run: |
           npm i -g @toast-ui/doc
       - name: npm install(toast.ui-grid)
