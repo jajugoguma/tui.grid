@@ -4,6 +4,8 @@ on: [workflow_dispatch]
 env:
   WORKING_DIRECTORY: ./packages/toast-ui.grid
   CACHED_DEPENDENCY_PATHS: ./packages/toast-ui.grid/node_modules
+  CACHED_BUILD_PATHS: ./packages/toast-ui.grid/dist
+  BUILD_CACHE_KEY: ${{ github.sha }}
 
 jobs:
   check-version:
@@ -23,19 +25,18 @@ jobs:
       - name: Cancel Workflow
         if: steps.check.outputs.is-new-version == 'false'
         uses: andymckay/cancel-action@0.2
-
+    
   install_dependencies:
     name: Install Dependencies
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
-      - name: Checkout branch
+      - name: Check out current commit (${{ github.sha }})
         uses: actions/checkout@v2
       - name: Set up Node
         uses: actions/setup-node@v1
       - name: Compute dependency cache key
-        id: compute_lockfile_hash
         working-directory: ${{ env.WORKING_DIRECTORY }}
+        id: compute_lockfile_hash
         run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
       - name: Check dependency cache
         uses: actions/cache@v2
@@ -50,8 +51,35 @@ jobs:
     outputs:
       dependency_cache_key: ${{ steps.compute_lockfile_hash.outputs.hash }}
 
+  build:
+    name: Build
+    needs: [install_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out current commit (${{ github.sha }})
+        uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v1
+      - name: Check dependency cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
+      - name: Check build cache
+        uses: actions/cache@v2
+        id: cache_built_packages
+        with:
+          path: ${{ env.CACHED_BUILD_PATHS }}
+          key: ${{ env.BUILD_CACHE_KEY }}
+      - name: Build packages
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        if: steps.cache_built_packages.outputs.cache-hit == ''
+        run: npm run build
+    outputs:
+      dependency_cache_key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
+
   push-tag:
-    needs: [check-version, install_dependencies]
+    needs: [check-version, build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -61,17 +89,6 @@ jobs:
         uses: PostHog/check-package-version@v2
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
-      - name: Install
-        run: npm ci
-      - name: Check dependency cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
-      - name: Build
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm run build
       - name: Create Tag
         run: |
           git config --local user.email "jajugoguma@gmail.com"
@@ -82,6 +99,8 @@ jobs:
           git push origin v${{ steps.version.outputs.committed-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      dependency_cache_key: ${{ needs.build.outputs.dependency_cache_key }}
 
   publish-docs:
     needs: [push-tag]
@@ -95,15 +114,14 @@ jobs:
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
       - name: npm install
-        run: npm ci
-      - name: npm i -g @toast-ui/doc
         run: |
+          npm ci
           npm i -g @toast-ui/doc
       - name: Check dependency cache
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
+          key: ${{ needs.push-tag.outputs.dependency_cache_key }}
       - name: Run doc
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -135,27 +153,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 15.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: '15.x'
-          registry-url: https://registry.npmjs.org/
       - name: npm install
         run: npm ci
       - name: Check dependency cache
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
-      - name: Build
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm run build
+          key: ${{ needs.push-tag.outputs.dependency_cache_key }}
+      - name: Check build cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHED_BUILD_PATHS }}
+          key: ${{ env.BUILD_CACHE_KEY }}
       - name: Publish
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+    outputs:
+      dependency_cache_key: ${{ needs.push-tag.outputs.dependency_cache_key }}
 
   publish-cdn:
     needs: [publish-package]
@@ -169,11 +185,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
-      - name: Build
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm run build
+          key: ${{ needs.publish-package.outputs.dependency_cache_key }}
+      - name: Check build cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHED_BUILD_PATHS }}
+          key: ${{ env.BUILD_CACHE_KEY }}
       - name: Upload files to CDN
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
