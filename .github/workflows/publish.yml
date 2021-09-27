@@ -35,12 +35,10 @@ jobs:
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
       - name: Install
-        run: |
-          npm ci
+        uses: ./.github/actions/install-dependencies
       - name: npm install(toast.ui-grid)
         working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm ci
+        uses: ./.github/actions/install-dependencies
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -70,13 +68,12 @@ jobs:
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
       - name: npm install
+        uses: ./.github/actions/install-dependencies
         run: |
           npm i -g @toast-ui/doc
-          npm ci
       - name: npm install(toast.ui-grid)
         working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm ci
+        uses: ./.github/actions/install-dependencies
       - name: Run doc
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -116,12 +113,10 @@ jobs:
           node-version: '15.x'
           registry-url: https://registry.npmjs.org/
       - name: npm install
-        run: |
-          npm ci
+        uses: ./.github/actions/install-dependencies
       - name: npm install(toast.ui-grid)
         working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm ci
+        uses: ./.github/actions/install-dependencies
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -141,12 +136,10 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v2
       - name: npm install
-        run: |
-          npm ci
+        uses: ./.github/actions/install-dependencies
       - name: npm install(toast.ui-grid)
         working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm ci
+        uses: ./.github/actions/install-dependencies
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
