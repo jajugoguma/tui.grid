@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+      - name: Use Node.js 15.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15.x'
+          registry-url: https://registry.npmjs.org/
       - name: Check package version
         id: check
         uses: PostHog/check-package-version@v2
@@ -33,8 +38,11 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
-      - name: Set up Node
+      - name: Use Node.js 15.x
         uses: actions/setup-node@v1
+        with:
+          node-version: '15.x'
+          registry-url: https://registry.npmjs.org/
       - name: Compute dependency cache key
         id: root_lockfile_hash
         run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
@@ -72,8 +80,11 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
-      - name: Set up Node
+      - name: Use Node.js 15.x
         uses: actions/setup-node@v1
+        with:
+          node-version: '15.x'
+          registry-url: https://registry.npmjs.org/
       - name: Check dependency cache
         uses: actions/cache@v2
         with:
@@ -104,6 +115,11 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+      - name: Use Node.js 15.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15.x'
+          registry-url: https://registry.npmjs.org/
       - name: Get package version
         id: version
         uses: PostHog/check-package-version@v2
@@ -129,6 +145,11 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+      - name: Use Node.js 15.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15.x'
+          registry-url: https://registry.npmjs.org/
       - name: Get package version
         id: version
         uses: PostHog/check-package-version@v2
@@ -177,6 +198,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Use Node.js 15.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15.x'
+          registry-url: https://registry.npmjs.org/
       - name: Check dependency cache
         uses: actions/cache@v2
         with:
@@ -207,6 +233,11 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+      - name: Use Node.js 15.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15.x'
+          registry-url: https://registry.npmjs.org/
       - name: Check dependency cache
         uses: actions/cache@v2
         with:
