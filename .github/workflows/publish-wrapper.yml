@@ -3,6 +3,8 @@ on: [workflow_dispatch]
 
 env:
   WORKING_DIRECTORY: ./packages/toast-ui.grid
+  VUE_WRAPPER_DIRECTORY: ./packages/toast-ui.vue-grid
+  REACT_WRAPPER_DIRECTORY: ./packages/toast-ui.react-grid
 
 jobs:
   publish-wrapper:
