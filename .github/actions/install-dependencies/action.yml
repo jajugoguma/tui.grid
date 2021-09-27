@@ -4,6 +4,7 @@ runs:
   steps:
     - uses: actions/checkout@v2
     - name: Cache node modules
+      working-directory: ${{ env.WORKING_DIRECTORY }}
       id: node-cache
       uses: actions/cache@v2
       env:
@@ -14,5 +15,6 @@ runs:
         restore-keys: |
           ${{ runner.os }}-node-modules-
     - name: Install Dependencies
+      working-directory: ${{ env.WORKING_DIRECTORY }}
       if: steps.node-cache.outputs.cache-hit != 'true'
       run: npm ci
