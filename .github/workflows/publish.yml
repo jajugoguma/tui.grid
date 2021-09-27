@@ -67,7 +67,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_build.outputs.dependency_cache_key }}
+          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -103,7 +103,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_build.outputs.dependency_cache_key }}
+          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
       - name: Run doc
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -146,7 +146,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_build.outputs.dependency_cache_key }}
+          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -169,7 +169,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_build.outputs.dependency_cache_key }}
+          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
