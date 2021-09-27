@@ -1,7 +1,7 @@
 name: Grid Publish
 on: [workflow_dispatch]
 jobs:
-  Check-Version:
+  checkVersion:
     name: Check package version
     runs-on: ubuntu-latest
     env:
@@ -57,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   Publish-Document:
-    needs: [checkVersion, tag]
+    needs: [checkVersion, Push-Tag]
     env:
       WORKING_DIRECTORY: ./packages/toast-ui.grid
     runs-on: ubuntu-latest
@@ -104,7 +104,7 @@ jobs:
           branch: gh-pages
 
   Publish-NPM:
-    needs: [checkVersion, tag]
+    needs: [checkVersion, Push-Tag]
     env:
       WORKING_DIRECTORY: ./packages/toast-ui.grid
     runs-on: ubuntu-latest
