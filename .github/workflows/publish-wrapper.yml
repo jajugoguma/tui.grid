@@ -21,12 +21,12 @@ jobs:
       with:
         path: ${{ env.WORKING_DIRECTORY }}/
     - name: Update package.json of wrappers
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm run update:wrapper
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+      run: |
+        npm run update:wrapper
     - name: Commit files
-        run: |
-          git config --local user.email "jajugoguma@gmail.com"
-          git config --local user.name "jajugoguma"
-          git add .
-          git commit -m "chore: update version of wrappers to v${{ steps.version.outputs.committed-version }}"
+      run: |
+        git config --local user.email "jajugoguma@gmail.com"
+        git config --local user.name "jajugoguma"
+        git add .
+        git commit -m "chore: update version of wrappers to v${{ steps.version.outputs.committed-version }}"
