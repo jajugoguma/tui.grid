@@ -21,6 +21,41 @@ jobs:
         if: steps.check.outputs.is-new-version == 'false'
         uses: andymckay/cancel-action@0.2
 
+  tag:
+    needs: [checkVersion]
+    env:
+      WORKING_DIRECTORY: ./packages/toast-ui.grid
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Get package version
+        id: version
+        uses: PostHog/check-package-version@v2
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}/
+      - name: Install
+        run: |
+          npm ci
+      - name: npm install(toast.ui-grid)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          npm ci
+      - name: Build
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          npm run build
+      - name: Create Tag
+        run: |
+          git config --local user.email "jajugoguma@gmail.com"
+          git config --local user.name "jajugoguma"
+          git tag v${{ steps.version.outputs.committed-version }}
+      - name: Push changes
+        run: |
+          git push origin v${{ steps.version.outputs.committed-version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   deploy-doc:
     needs: [checkVersion, tag]
     env:
@@ -34,14 +69,9 @@ jobs:
         uses: PostHog/check-package-version@v2
         with:
           path: ${{ env.WORKING_DIRECTORY }}/
-      - name: npm install
+      - name: Install @toast-ui/doc
         run: |
           npm i -g @toast-ui/doc
-          npm ci
-      - name: npm install(toast.ui-grid)
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm install
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
@@ -71,40 +101,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
-  tag:
-    needs: [checkVersion]
-    env:
-      WORKING_DIRECTORY: ./packages/toast-ui.grid
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v2
-      - name: Get package version
-        id: version
-        uses: PostHog/check-package-version@v2
-        with:
-          path: ${{ env.WORKING_DIRECTORY }}/
-      - name: Install
-        run: |
-          npm install
-      - name: npm install(toast.ui-grid)
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm install
-      - name: Build
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm run build
-      - name: Create Tag
-        run: |
-          git config --local user.email "jajugoguma@gmail.com"
-          git config --local user.name "jajugoguma"
-          git tag v${{ steps.version.outputs.committed-version }}
-      - name: Push changes
-        run: |
-          git push origin v${{ steps.version.outputs.committed-version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
     needs: [checkVersion, tag]
@@ -113,13 +109,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: npm install
-        run: |
-          npm install
-      - name: npm install(toast.ui-grid)
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm install
       - name: Build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
