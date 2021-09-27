@@ -24,6 +24,14 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           npm run update:wrapper
+      - name: Vue wrapper lock update
+        working-directory: ${{ env.VUE_WRAPPER_DIRECTORY }}
+        run: |
+          npm install
+      - name: React wrapper lock update
+        working-directory: ${{ env.REACT_WRAPPER_DIRECTORY }}
+        run: |
+          npm install
       - name: Commit files
         run: |
           git config --local user.email "jajugoguma@gmail.com"
