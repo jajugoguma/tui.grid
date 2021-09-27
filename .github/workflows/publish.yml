@@ -62,6 +62,7 @@ jobs:
         run: |
           git config --local user.email "jajugoguma@gmail.com"
           git config --local user.name "jajugoguma"
+          rm -rf latest
           git stash pop
           git add .
           git commit -m "${{ steps.version.outputs.committed-version }}"
