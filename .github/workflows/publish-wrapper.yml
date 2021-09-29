@@ -1,4 +1,4 @@
-name: Wrapper Publish
+name: Publish wrapper
 on: [workflow_dispatch]
 
 env:
@@ -45,3 +45,11 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: master
+      - name: Publish vue wrapper
+        working-directory: ${{ env.VUE_WRAPPER_DIRECTORY }}
+        run: |
+          npm publish
+      - name: Publish react wrapper
+        working-directory: ${{ env.REACT_WRAPPER_DIRECTORY }}
+        run: |
+          npm publish

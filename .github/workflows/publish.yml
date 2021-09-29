@@ -1,4 +1,4 @@
-name: Grid Publish
+name: Publish grid
 on: [workflow_dispatch]
 
 env:
@@ -49,37 +49,81 @@ jobs:
       root_cache_key: ${{ needs.install_dependencies.outputs.root_cache_key }}
       grid_cache_key: ${{ needs.install_dependencies.outputs.grid_cache_key }}
 
-  publish-package:
-    needs: [build]
-    name: Publish package
+  push-tag:
+    needs: [check-version, build]
+    name: Push tag
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
       - name: Use Node.js 15.x
         uses: actions/setup-node@v1
         with:
           node-version: '15.x'
           registry-url: https://registry.npmjs.org/
-      - name: Check dependency cache
-        uses: actions/cache@v2
+      - name: Get package version
+        id: version
+        uses: PostHog/check-package-version@v2
         with:
-          path: ${{ env.ROOT_DEPENDENCY_PATHS }}
-          key: ${{ needs.build.outputs.root_cache_key }}
-      - name: Check dependency cache (toast.ui-grid)
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.build.outputs.grid_cache_key }}
-      - name: Check build cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.CACHED_BUILD_PATHS }}
-          key: ${{ env.BUILD_CACHE_KEY }}
-      - name: Publish
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: ls
+          path: ${{ env.WORKING_DIRECTORY }}/
+      - name: Create Tag
+        run: |
+          git config --local user.email "jajugoguma@gmail.com"
+          git config --local user.name "jajugoguma"
+          git tag v${{ steps.version.outputs.committed-version }}
+      - name: Push changes
+        run: |
+          git push origin v${{ steps.version.outputs.committed-version }}
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
-    outputs:
-      root_cache_key: ${{ needs.build.outputs.root_cache_key }}
-      grid_cache_key: ${{ needs.build.outputs.grid_cache_key }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-package:
+    needs: [check-version, build]
+    name: Publish package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish package
+        uses: ./.github/actions/publish-package
+        with:
+          ROOT_DEPENDENCY_PATHS: ${{ env.ROOT_DEPENDENCY_PATHS }}
+          CACHED_DEPENDENCY_PATHS: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+          CACHED_BUILD_PATHS: ${{ env.CACHED_BUILD_PATHS }}
+          ROOT_CACHE_KEY: ${{ needs.build.outputs.root_cache_key }}
+          GRID_CACHE_KEY: ${{ needs.build.outputs.grid_cache_key }}
+          BUILD_CACHE_KEY: ${{ env.BUILD_CACHE_KEY }}
+
+  publish-cdn:
+    needs: [check-version, build]
+    name: Publish to CDN
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Publish to CDN
+        uses: ./.github/actions/publish-to-cdn
+        with:
+          ROOT_DEPENDENCY_PATHS: ${{ env.ROOT_DEPENDENCY_PATHS }}
+          CACHED_DEPENDENCY_PATHS: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+          CACHED_BUILD_PATHS: ${{ env.CACHED_BUILD_PATHS }}
+          ROOT_CACHE_KEY: ${{ needs.build.outputs.root_cache_key }}
+          GRID_CACHE_KEY: ${{ needs.build.outputs.grid_cache_key }}
+          BUILD_CACHE_KEY: ${{ env.BUILD_CACHE_KEY }}
+
+  publish-docs:
+    needs: [check-version, build]
+    name: Publish documents
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Publish documents
+        uses: ./.github/actions/publish-docs
+        with:
+          ROOT_DEPENDENCY_PATHS: ${{ env.ROOT_DEPENDENCY_PATHS }}
+          CACHED_DEPENDENCY_PATHS: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+          ROOT_CACHE_KEY: ${{ needs.build.outputs.root_cache_key }}
+          GRID_CACHE_KEY: ${{ needs.build.outputs.grid_cache_key }}
