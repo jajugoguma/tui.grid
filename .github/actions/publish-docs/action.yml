@@ -70,6 +70,4 @@ runs:
         github_token: ${{ inputs.GITHUB_TOKEN }}
         branch: gh-pages
     - name: Checkout branch
-        uses: actions/checkout@v2
-        with:
-          ref: master
+      uses: actions/checkout@v2
