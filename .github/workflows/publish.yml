@@ -41,6 +41,7 @@ jobs:
           ROOT_DEPENDENCY_PATHS: ${{ env.ROOT_DEPENDENCY_PATHS }}
           CACHED_DEPENDENCY_PATHS: ${{ env.CACHED_DEPENDENCY_PATHS }}
           WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+          CACHED_BUILD_PATHS: ${{ env.CACHED_BUILD_PATHS }}
           ROOT_CACHE_KEY: ${{ needs.install_dependencies.outputs.root_cache_key }}
           GRID_CACHE_KEY: ${{ needs.install_dependencies.outputs.grid_cache_key }}
           BUILD_CACHE_KEY: ${{ env.BUILD_CACHE_KEY }}

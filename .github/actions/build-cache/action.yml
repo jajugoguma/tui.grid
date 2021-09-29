@@ -10,6 +10,9 @@ inputs:
   CACHED_DEPENDENCY_PATHS:
     description: 'Path of node modules'
     require: true
+  CACHED_BUILD_PATHS:
+    description: 'Path of dist'
+    require: true
   ROOT_CACHE_KEY:
     description: 'Key of root dependencise'
     require: true
