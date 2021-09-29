@@ -11,6 +11,29 @@ env:
   BUILD_CACHE_KEY: ${{ github.sha }}
 
 jobs:
+  check-version:
+    name: Check package version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Use Node.js 15.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15.x'
+          registry-url: https://registry.npmjs.org/
+      - name: Check package version
+        id: check
+        uses: PostHog/check-package-version@v2
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}/
+      - name: Log when unchanged
+        if: steps.check.outputs.is-new-version == 'false'
+        run: 'echo "No version change"'
+      - name: Cancel Workflow
+        if: steps.check.outputs.is-new-version == 'false'
+        uses: andymckay/cancel-action@0.2
+
   install_dependencies:
     name: Install dependencies
     runs-on: ubuntu-latest
