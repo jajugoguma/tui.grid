@@ -89,7 +89,7 @@ jobs:
       grid_cache_key: ${{ needs.install_dependencies.outputs.grid_cache_key }}
 
   publish-package:
-    needs: [install_dependencies]
+    needs: [build]
     name: Publish package
     runs-on: ubuntu-latest
     steps:
@@ -103,12 +103,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.ROOT_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.root_cache_key }}
+          key: ${{ needs.build.outputs.root_cache_key }}
       - name: Check dependency cache (toast.ui-grid)
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.grid_cache_key }}
+          key: ${{ needs.build.outputs.grid_cache_key }}
       - name: Check build cache
         uses: actions/cache@v2
         with:
@@ -120,5 +120,5 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
     outputs:
-      root_cache_key: ${{ needs.install_dependencies.outputs.root_cache_key }}
-      grid_cache_key: ${{ needs.install_dependencies.outputs.grid_cache_key }}
+      root_cache_key: ${{ needs.build.outputs.root_cache_key }}
+      grid_cache_key: ${{ needs.build.outputs.grid_cache_key }}
