@@ -35,31 +35,15 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
-      - name: Use Node.js 15.x
-        uses: actions/setup-node@v1
+      - name: build
+        uses: ./.github/actions/build-cache
         with:
-          node-version: '15.x'
-          registry-url: https://registry.npmjs.org/
-      - name: Check dependency cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.ROOT_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.root_cache_key }}
-      - name: Check dependency cache (toast.ui-grid)
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.grid_cache_key }}
-      - name: Check build cache
-        uses: actions/cache@v2
-        id: cache_built_packages
-        with:
-          path: ${{ env.CACHED_BUILD_PATHS }}
-          key: ${{ env.BUILD_CACHE_KEY }}
-      - name: Build packages
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        if: steps.cache_built_packages.outputs.cache-hit == ''
-        run: npm run build
+          ROOT_DEPENDENCY_PATHS: ${{ env.ROOT_DEPENDENCY_PATHS }}
+          CACHED_DEPENDENCY_PATHS: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+          ROOT_CACHE_KEY: ${{ needs.install_dependencies.outputs.root_cache_key }}
+          GRID_CACHE_KEY: ${{ needs.install_dependencies.outputs.grid_cache_key }}
+          BUILD_CACHE_KEY: ${{ env.BUILD_CACHE_KEY }}
     outputs:
       root_cache_key: ${{ needs.install_dependencies.outputs.root_cache_key }}
       grid_cache_key: ${{ needs.install_dependencies.outputs.grid_cache_key }}
