@@ -29,7 +29,7 @@ jobs:
       grid_cache_key: ${{ steps.cache-keys.outputs.grid_cache_key }}
 
   publish-docs:
-    needs: [check-version, install_dependencies]
+    needs: [install_dependencies]
     name: Publish documents
     runs-on: ubuntu-latest
     steps:
