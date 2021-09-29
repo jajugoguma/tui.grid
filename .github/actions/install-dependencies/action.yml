@@ -18,6 +18,7 @@ outputs:
         description: 'Key of dependencise'
         value: ${{ steps.grid_lockfile_hash.outputs.hash }}
 runs:
+  using: "composite"
   steps:
       - name: Checkout branch
         uses: actions/checkout@v2
