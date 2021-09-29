@@ -22,6 +22,18 @@ inputs:
   BUILD_CACHE_KEY:
     description: 'Key of build'
     require: true
+  TOAST_CLOUD_TENENTID:
+    description: 'Tenent id for CDN'
+    require: true
+  TOAST_CLOUD_STORAGEID:
+    description: 'Storage id for CDN'
+    require: true
+  TOAST_CLOUD_USERNAME:
+    description: 'User name for CDN'
+    require: true
+  TOAST_CLOUD_PASSWORD:
+    description: 'password for CDN'
+    require: true
 
 runs:
   using: "composite"
@@ -45,9 +57,9 @@ runs:
       working-directory: ${{ inputs.WORKING_DIRECTORY }}
       run: |
         npm run publish:cdn
-      inputs:
-        TOAST_CLOUD_TENENTID: ${{ secrets.TOAST_CLOUD_TENENTID }}
-        TOAST_CLOUD_STORAGEID: ${{ secrets.TOAST_CLOUD_STORAGEID }}
-        TOAST_CLOUD_USERNAME: ${{ secrets.TOAST_CLOUD_USERNAME }}
-        TOAST_CLOUD_PASSWORD: ${{ secrets.TOAST_CLOUD_PASSWORD }}
+      env:
+        TOAST_CLOUD_TENENTID: ${{ inputs.TOAST_CLOUD_TENENTID }}
+        TOAST_CLOUD_STORAGEID: ${{ inputs.TOAST_CLOUD_STORAGEID }}
+        TOAST_CLOUD_USERNAME: ${{ inputs.TOAST_CLOUD_USERNAME }}
+        TOAST_CLOUD_PASSWORD: ${{ inputs.TOAST_CLOUD_PASSWORD }}
       shell: bash

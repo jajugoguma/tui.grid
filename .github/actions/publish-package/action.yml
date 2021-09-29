@@ -22,6 +22,9 @@ inputs:
   BUILD_CACHE_KEY:
     description: 'Key of build'
     require: true
+  NPM_AUTH_TOKEN:
+    description: 'NPM authrization token'
+    require: true
 
 runs:
   using: "composite"

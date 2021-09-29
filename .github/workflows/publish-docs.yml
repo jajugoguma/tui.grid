@@ -43,3 +43,4 @@ jobs:
           WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
           ROOT_CACHE_KEY: ${{ needs.install_dependencies.outputs.root_cache_key }}
           GRID_CACHE_KEY: ${{ needs.install_dependencies.outputs.grid_cache_key }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

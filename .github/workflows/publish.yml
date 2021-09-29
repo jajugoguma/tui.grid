@@ -116,6 +116,7 @@ jobs:
           ROOT_CACHE_KEY: ${{ needs.build.outputs.root_cache_key }}
           GRID_CACHE_KEY: ${{ needs.build.outputs.grid_cache_key }}
           BUILD_CACHE_KEY: ${{ env.BUILD_CACHE_KEY }}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
   publish-cdn:
     needs: [check-version, build]
@@ -134,6 +135,10 @@ jobs:
           ROOT_CACHE_KEY: ${{ needs.build.outputs.root_cache_key }}
           GRID_CACHE_KEY: ${{ needs.build.outputs.grid_cache_key }}
           BUILD_CACHE_KEY: ${{ env.BUILD_CACHE_KEY }}
+          TOAST_CLOUD_TENENTID: ${{ secrets.TOAST_CLOUD_TENENTID }}
+          TOAST_CLOUD_STORAGEID: ${{ secrets.TOAST_CLOUD_STORAGEID }}
+          TOAST_CLOUD_USERNAME: ${{ secrets.TOAST_CLOUD_USERNAME }}
+          TOAST_CLOUD_PASSWORD: ${{ secrets.TOAST_CLOUD_PASSWORD }}
 
   publish-docs:
     needs: [check-version, build]
@@ -150,3 +155,4 @@ jobs:
           WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
           ROOT_CACHE_KEY: ${{ needs.build.outputs.root_cache_key }}
           GRID_CACHE_KEY: ${{ needs.build.outputs.grid_cache_key }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

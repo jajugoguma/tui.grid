@@ -16,6 +16,9 @@ inputs:
   GRID_CACHE_KEY:
     description: 'Key of dependencise'
     require: true
+  GITHUB_TOKEN:
+    description: 'Github token'
+    require: true
 
 runs:
   using: "composite"
@@ -63,5 +66,5 @@ runs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ inputs.GITHUB_TOKEN }}
         branch: gh-pages
