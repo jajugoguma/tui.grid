@@ -71,3 +71,5 @@ runs:
         branch: gh-pages
     - name: Checkout branch
         uses: actions/checkout@v2
+        with:
+          ref: master
