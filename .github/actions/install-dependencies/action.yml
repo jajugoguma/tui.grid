@@ -38,8 +38,13 @@ runs:
           path: ${{ inputs.ROOT_DEPENDENCY_PATHS }}
           key: ${{ steps.root_lockfile_hash.outputs.hash }}
       - name: Install dependencies
-        if: steps.root_cache_dependencies.outputs.cache-hit == ''
-        run: npm install
+        run: |
+          if echo ${{ steps.root_cache_dependencies.outputs.cache-hit }} | grep -c "true"
+          then
+            echo "Cache hit - skipping dependency installation"
+          else
+            npm install
+          fi
         shell: bash
       - name: Compute dependency cache key (toast.ui-grid)
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
@@ -54,6 +59,11 @@ runs:
           key: ${{ steps.grid_lockfile_hash.outputs.hash }}
       - name: Install dependencies (toast.ui-grid)
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
-        if: steps.grid_cache_dependencies.outputs.cache-hit == ''
-        run: npm install
+        run: |
+          if echo ${{ steps.grid_cache_dependencies.outputs.cache-hit }} | grep -c "true"
+          then
+            echo "Cache hit - skipping dependency installation"
+          else
+            npm install
+          fi
         shell: bash
