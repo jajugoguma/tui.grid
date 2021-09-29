@@ -48,6 +48,6 @@ runs:
       - name: Publish
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
         run: npm publish
-        inputs:
+        env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
         shell: bash
