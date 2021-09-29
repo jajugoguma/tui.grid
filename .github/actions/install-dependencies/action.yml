@@ -29,6 +29,7 @@ runs:
       - name: Compute dependency cache key
         id: root_lockfile_hash
         run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
+        shell: bash
       - name: Check dependency cache
         uses: actions/cache@v2
         id: root_cache_dependencies
@@ -38,10 +39,12 @@ runs:
       - name: Install dependencies
         if: steps.root_cache_dependencies.outputs.cache-hit == ''
         run: npm install
+        shell: bash
       - name: Compute dependency cache key (toast.ui-grid)
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
         id: grid_lockfile_hash
         run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
+        shell: bash
       - name: Check dependency cache (toast.ui-grid)
         uses: actions/cache@v2
         id: grid_cache_dependencies
@@ -52,3 +55,4 @@ runs:
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
         if: steps.grid_cache_dependencies.outputs.cache-hit == ''
         run: npm install
+        shell: bash
