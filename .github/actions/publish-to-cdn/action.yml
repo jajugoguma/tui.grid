@@ -1,39 +1,32 @@
 name: 'Publish to CDN'
 description: "Publish bundles to CDN"
+env:
+  WORKING_DIRECTORY: ./packages/toast-ui.grid
+  CACHED_DEPENDENCY_PATHS: ./packages/toast-ui.grid/node_modules
+  ROOT_DEPENDENCY_PATHS: ./node_modules
+  CACHED_BUILD_PATHS: ./packages/toast-ui.grid/dist
 inputs:
-  ROOT_DEPENDENCY_PATHS:
-    description: 'Path of root node modules'
-    require: true
-  WORKING_DIRECTORY:
-    description: 'Path of working directory'
-    require: true
-  CACHED_DEPENDENCY_PATHS:
-    description: 'Path of node modules'
-    require: true
-  CACHED_BUILD_PATHS:
-    description: 'Path of dist'
-    require: true
   ROOT_CACHE_KEY:
     description: 'Key of root dependencise'
-    require: true
+    required: true
   GRID_CACHE_KEY:
     description: 'Key of dependencise'
-    require: true
+    required: true
   BUILD_CACHE_KEY:
     description: 'Key of build'
-    require: true
+    required: true
   TOAST_CLOUD_TENENTID:
     description: 'Tenent id for CDN'
-    require: true
+    required: true
   TOAST_CLOUD_STORAGEID:
     description: 'Storage id for CDN'
-    require: true
+    required: true
   TOAST_CLOUD_USERNAME:
     description: 'User name for CDN'
-    require: true
+    required: true
   TOAST_CLOUD_PASSWORD:
     description: 'password for CDN'
-    require: true
+    required: true
 
 runs:
   using: "composite"
@@ -46,20 +39,20 @@ runs:
     - name: Check dependency cache
       uses: actions/cache@v2
       with:
-        path: ${{ inputs.ROOT_DEPENDENCY_PATHS }}
+        path: ${{ env.ROOT_DEPENDENCY_PATHS }}
         key: ${{ inputs.ROOT_CACHE_KEY }}
     - name: Check dependency cache (toast.ui-grid)
       uses: actions/cache@v2
       with:
-        path: ${{ inputs.CACHED_DEPENDENCY_PATHS }}
+        path: ${{ env.CACHED_DEPENDENCY_PATHS }}
         key: ${{ inputs.GRID_CACHE_KEY }}
     - name: Check build cache
       uses: actions/cache@v2
       with:
-        path: ${{ inputs.CACHED_BUILD_PATHS }}
+        path: ${{ env.CACHED_BUILD_PATHS }}
         key: ${{ inputs.BUILD_CACHE_KEY }}
     - name: Upload files to CDN
-      working-directory: ${{ inputs.WORKING_DIRECTORY }}
+      working-directory: ${{ env.WORKING_DIRECTORY }}
       run: |
         npm run publish:cdn
       env:

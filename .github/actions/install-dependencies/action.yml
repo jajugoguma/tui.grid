@@ -1,10 +1,16 @@
 name: 'Install Dependencies'
 description: "Set Node.js version and Install node modules"
-
 env:
   WORKING_DIRECTORY: ./packages/toast-ui.grid
   CACHED_DEPENDENCY_PATHS: ./packages/toast-ui.grid/node_modules
   ROOT_DEPENDENCY_PATHS: ./node_modules
+outputs:
+  root_cache_key:
+    description: 'Key of root dependencise'
+    value: ${{ steps.root_lockfile_hash.outputs.hash }}
+  grid_cache_key:
+    description: 'Key of dependencise'
+    value: ${{ steps.grid_lockfile_hash.outputs.hash }}
 
 runs:
   using: "composite"
