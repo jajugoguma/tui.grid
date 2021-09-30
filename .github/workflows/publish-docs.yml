@@ -20,10 +20,6 @@ jobs:
       - name: install_dependencies
         id: cache-keys
         uses: ./.github/actions/install-dependencies
-        with:
-          ROOT_DEPENDENCY_PATHS: ${{ env.ROOT_DEPENDENCY_PATHS }}
-          CACHED_DEPENDENCY_PATHS: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
     outputs:
       root_cache_key: ${{ steps.cache-keys.outputs.root_cache_key }}
       grid_cache_key: ${{ steps.cache-keys.outputs.grid_cache_key }}
