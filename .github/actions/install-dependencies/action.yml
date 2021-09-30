@@ -24,8 +24,7 @@ runs:
       id: root_lockfile_hash
       run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
       shell: bash
-    - name: Compute dependency cache key
-      id: root_lockfile_hash
+    - name: Echo env
       run: echo ${{ env }}
       shell: bash
     - name: Check dependency cache
