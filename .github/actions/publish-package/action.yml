@@ -1,10 +1,5 @@
 name: 'Publish to CDN'
 description: "Publish bundles to CDN"
-env:
-  WORKING_DIRECTORY: ./packages/toast-ui.grid
-  CACHED_DEPENDENCY_PATHS: ./packages/toast-ui.grid/node_modules
-  ROOT_DEPENDENCY_PATHS: ./node_modules
-  CACHED_BUILD_PATHS: ./packages/toast-ui.grid/dist
 inputs:
   ROOT_CACHE_KEY:
     description: 'Key of root dependencise'
