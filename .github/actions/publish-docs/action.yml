@@ -45,6 +45,9 @@ runs:
       with:
         path: ${{ env.CACHED_BUILD_PATHS }}/
         key: ${{ inputs.BUILD_CACHE_KEY }}
+    - name: Test
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+      run: ls
     - name: Run doc
       working-directory: ${{ env.WORKING_DIRECTORY }}
       run: |
