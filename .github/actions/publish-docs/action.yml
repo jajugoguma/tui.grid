@@ -47,12 +47,13 @@ runs:
         key: ${{ inputs.BUILD_CACHE_KEY }}
     - name: Test
       working-directory: ${{ env.WORKING_DIRECTORY }}
-      run: ls
+      run: ls dist/
       shell: bash
     - name: Run doc
       working-directory: ${{ env.WORKING_DIRECTORY }}
       run: |
         npm run doc
+        ls _latest/dist
         mv _${{ steps.version.outputs.committed-version }} ../../${{ steps.version.outputs.committed-version }}
         mv -i _latest ../../latest
         rm -rf tmpdoc
