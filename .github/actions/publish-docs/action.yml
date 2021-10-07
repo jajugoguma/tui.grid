@@ -48,6 +48,7 @@ runs:
     - name: Test
       working-directory: ${{ env.WORKING_DIRECTORY }}
       run: ls
+      shell: bash
     - name: Run doc
       working-directory: ${{ env.WORKING_DIRECTORY }}
       run: |
