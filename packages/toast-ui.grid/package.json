@@ -1,6 +1,6 @@
 {
   "name": "tui-test-bar",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "TOAST UI Grid : Powerful data grid control supported by TOAST UI",
   "main": "dist/tui-grid.js",
   "types": "types/index.d.ts",
